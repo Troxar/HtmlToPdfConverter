@@ -1,4 +1,5 @@
-﻿using HtmlToPdfConverter.entities;
+﻿using System.Net;
+using HtmlToPdfConverter.entities;
 using HtmlToPdfConverter.services;
 
 namespace HtmlToPdfConverter;
@@ -23,6 +24,14 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();
         }
+        else
+        {
+            app.UseExceptionHandler(builder => builder.Run(async context =>
+            {
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                await context.Response.WriteAsync("Something went wrong");
+            }));
+        }
         
         app.UseDefaultFiles();
         app.UseStaticFiles();
@@ -45,23 +54,28 @@ public class Startup
         }
 
         var innerFileName = Path.GetRandomFileName();
+        var uploadPath = Path.Combine(_config["Converting:UploadFolder"],
+            Path.ChangeExtension(innerFileName, ".html"));
+        var downloadPath = Path.Combine(_config["Converting:DownloadFolder"],
+            Path.ChangeExtension(innerFileName, ".pdf"));
+        
         var fileInfo = new FileToConvertInfo(
             file.FileName,
             Path.ChangeExtension(file.FileName, "pdf"),
-            Path.Combine(Directory.GetCurrentDirectory(), "upload", Path.ChangeExtension(innerFileName, ".html")),
-            Path.Combine(Directory.GetCurrentDirectory(), "download", Path.ChangeExtension(innerFileName, ".pdf"))
-        );
-        
-        logger.LogInformation($"File uploading: {fileInfo.OriginalFileName}");
+            Path.GetFullPath(uploadPath),
+            Path.GetFullPath(downloadPath)
+            );
+
+        logger.LogInformation(string.Format("File uploading: {0}", fileInfo.OriginalFileName));
         await using (var stream = File.Create(fileInfo.UploadPath))
         {
             await file.CopyToAsync(stream, token);
         }
 
-        logger.LogInformation($"File convertation: {fileInfo.UploadPath}");
+        logger.LogInformation(string.Format("File converting: {0}", fileInfo.UploadPath));
         await converter.ConvertAsync(fileInfo);
         
-        logger.LogInformation($"File downloading: {fileInfo.DownloadPath}");
+        logger.LogInformation(string.Format("File downloading: {0}", fileInfo.DownloadPath));
         return await Task.FromResult(Results.File(fileInfo.DownloadPath, null, fileInfo.ConvertedFileName));
     }
 }
