@@ -431,3 +431,10 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# upload/download
+*/upload/*
+!*/upload/test.html
+*/download
+
+.local-chromium/
