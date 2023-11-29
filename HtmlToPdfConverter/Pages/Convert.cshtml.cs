@@ -1,7 +1,9 @@
+using HtmlToPdfConverter.Configuration;
 using HtmlToPdfConverter.entities;
 using HtmlToPdfConverter.services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Options;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace HtmlToPdfConverter.Pages
@@ -9,15 +11,15 @@ namespace HtmlToPdfConverter.Pages
     [IgnoreAntiforgeryToken]
     public class ConvertModel : PageModel
     {
-        readonly IConfiguration _config;
+        readonly IOptions<ConvertingOptions> _options;
         readonly ILogger<ConvertModel> _logger;
 
         [BindProperty]
         public IFormFile? InputFile { get; set; }
 
-        public ConvertModel(IConfiguration config, ILogger<ConvertModel> logger)
+        public ConvertModel(IOptions<ConvertingOptions> options, ILogger<ConvertModel> logger)
         {
-            _config = config;
+            _options = options;
             _logger = logger;
         }
 
@@ -38,9 +40,9 @@ namespace HtmlToPdfConverter.Pages
             }
 
             var innerFileName = Path.GetRandomFileName();
-            var uploadPath = Path.Combine(_config["Converting:UploadFolder"],
+            var uploadPath = Path.Combine(_options.Value.UploadFolder,
                 Path.ChangeExtension(innerFileName, ".html"));
-            var downloadPath = Path.Combine(_config["Converting:DownloadFolder"],
+            var downloadPath = Path.Combine(_options.Value.DownloadFolder,
                 Path.ChangeExtension(innerFileName, ".pdf"));
 
             var fileInfo = new FileToConvertInfo

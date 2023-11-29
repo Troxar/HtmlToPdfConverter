@@ -1,14 +1,23 @@
-﻿using HtmlToPdfConverter.services;
+﻿using HtmlToPdfConverter.Configuration;
+using HtmlToPdfConverter.services;
 using System.Net;
 
 namespace HtmlToPdfConverter;
 
 public class Startup
 {
+    readonly IConfiguration _config;
+
+    public Startup(IConfiguration config)
+    {
+        _config = config;
+    }
+
     public void ConfigureServices(IServiceCollection services)
     {
         services.AddRazorPages();
         services.AddTransient<IConverter, PuppeteerSharpConverter>();
+        services.Configure<ConvertingOptions>(_config.GetSection("Converting"));
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

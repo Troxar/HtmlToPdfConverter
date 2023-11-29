@@ -5,15 +5,9 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
-
+  
     <ItemGroup>
-      <None Update="Content\index.html">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="download" />
+      <Folder Include="Download\" />
       <Folder Include="wwwroot\" />
     </ItemGroup>
 
