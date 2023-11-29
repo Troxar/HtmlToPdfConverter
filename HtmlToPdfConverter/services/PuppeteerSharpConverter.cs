@@ -1,7 +1,7 @@
-﻿using HtmlToPdfConverter.entities;
+﻿using HtmlToPdfConverter.Entities;
 using PuppeteerSharp;
 
-namespace HtmlToPdfConverter.services;
+namespace HtmlToPdfConverter.Services;
 
 public class PuppeteerSharpConverter : IConverter
 {

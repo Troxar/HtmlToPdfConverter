@@ -1,6 +1,6 @@
 using HtmlToPdfConverter.Configuration;
-using HtmlToPdfConverter.entities;
-using HtmlToPdfConverter.services;
+using HtmlToPdfConverter.Entities;
+using HtmlToPdfConverter.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Options;
@@ -39,19 +39,7 @@ namespace HtmlToPdfConverter.Pages
                 return BadRequest("File is empty");
             }
 
-            var innerFileName = Path.GetRandomFileName();
-            var uploadPath = Path.Combine(_options.Value.UploadFolder,
-                Path.ChangeExtension(innerFileName, ".html"));
-            var downloadPath = Path.Combine(_options.Value.DownloadFolder,
-                Path.ChangeExtension(innerFileName, ".pdf"));
-
-            var fileInfo = new FileToConvertInfo
-            {
-                OriginalFileName = InputFile.FileName,
-                ConvertedFileName = Path.ChangeExtension(InputFile.FileName, "pdf"),
-                UploadPath = Path.GetFullPath(uploadPath),
-                DownloadPath = Path.GetFullPath(downloadPath)
-            };
+            var fileInfo = new FileToConvertInfo(InputFile.FileName, _options);
 
             _logger.LogInformation(string.Format("File uploading: {0}", fileInfo.OriginalFileName));
             using (var fileStream = new FileStream(fileInfo.UploadPath, FileMode.Create))

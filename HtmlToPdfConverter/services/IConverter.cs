@@ -1,6 +1,6 @@
-﻿using HtmlToPdfConverter.entities;
+﻿using HtmlToPdfConverter.Entities;
 
-namespace HtmlToPdfConverter.services;
+namespace HtmlToPdfConverter.Services;
 
 public interface IConverter
 {

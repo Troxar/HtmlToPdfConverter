@@ -1,5 +1,5 @@
 ﻿using HtmlToPdfConverter.Configuration;
-using HtmlToPdfConverter.services;
+using HtmlToPdfConverter.Services;
 using System.Net;
 
 namespace HtmlToPdfConverter;
