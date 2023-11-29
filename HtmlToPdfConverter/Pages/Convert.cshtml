@@ -1,0 +1,20 @@
+﻿@page "/"
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model HtmlToPdfConverter.Pages.ConvertModel
+@{
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Converter</title>
+</head>
+<body>
+    <h2>Html to Pdf converter</h2>
+    <form enctype="multipart/form-data" method="post">
+        <input type="file" asp-for="@Model.InputFile">
+        <input type="submit" value="Convert">
+    </form>
+</body>
+</html>

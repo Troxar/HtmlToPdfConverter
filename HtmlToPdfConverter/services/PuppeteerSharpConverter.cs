@@ -3,7 +3,7 @@ using PuppeteerSharp;
 
 namespace HtmlToPdfConverter.services;
 
-internal class PuppeteerSharpConverter : IConverter
+public class PuppeteerSharpConverter : IConverter
 {
     public async Task ConvertAsync(FileToConvertInfo fileInfo)
     {
@@ -13,7 +13,6 @@ internal class PuppeteerSharpConverter : IConverter
         {
             Headless = true
         });
-        
         await using var page = await browser.NewPageAsync();
         await page.GoToAsync(fileInfo.UploadPath);
         await page.PdfAsync(fileInfo.DownloadPath);

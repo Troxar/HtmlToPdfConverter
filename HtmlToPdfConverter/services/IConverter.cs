@@ -2,7 +2,7 @@
 
 namespace HtmlToPdfConverter.services;
 
-internal interface IConverter
+public interface IConverter
 {
     public Task ConvertAsync(FileToConvertInfo fileInfo);
 }
