@@ -17,6 +17,7 @@ public class Startup
     {
         services.AddRazorPages();
         services.AddTransient<IConverter, PuppeteerSharpConverter>();
+        services.AddScoped<FileToConvertInfoFactory>();
         services.Configure<ConvertingOptions>(_config.GetSection("Converting"));
     }
 

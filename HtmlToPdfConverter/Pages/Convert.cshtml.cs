@@ -1,9 +1,6 @@
-using HtmlToPdfConverter.Configuration;
-using HtmlToPdfConverter.Entities;
 using HtmlToPdfConverter.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Options;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace HtmlToPdfConverter.Pages
@@ -11,15 +8,13 @@ namespace HtmlToPdfConverter.Pages
     [IgnoreAntiforgeryToken]
     public class ConvertModel : PageModel
     {
-        readonly IOptions<ConvertingOptions> _options;
         readonly ILogger<ConvertModel> _logger;
 
         [BindProperty]
         public IFormFile? InputFile { get; set; }
 
-        public ConvertModel(IOptions<ConvertingOptions> options, ILogger<ConvertModel> logger)
+        public ConvertModel(ILogger<ConvertModel> logger)
         {
-            _options = options;
             _logger = logger;
         }
 
@@ -27,7 +22,8 @@ namespace HtmlToPdfConverter.Pages
         {
         }
 
-        public async Task<IActionResult> OnPostAsync([FromServices] IConverter converter)
+        public async Task<IActionResult> OnPostAsync([FromServices] IConverter converter,
+            [FromServices] FileToConvertInfoFactory factory)
         {
             if (InputFile is null)
             {
@@ -39,7 +35,7 @@ namespace HtmlToPdfConverter.Pages
                 return BadRequest("File is empty");
             }
 
-            var fileInfo = new FileToConvertInfo(InputFile.FileName, _options);
+            var fileInfo = factory.Create(InputFile.FileName);
 
             _logger.LogInformation(string.Format("File uploading: {0}", fileInfo.OriginalFileName));
             using (var fileStream = new FileStream(fileInfo.UploadPath, FileMode.Create))
